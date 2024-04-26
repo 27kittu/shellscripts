@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+func(){
+echo 'Hello, this is a new function'
+apt install epel-release -y
+
+if [ $? -ne 0 ]
+then 
+echo "Error $?"
+fi
+}
+func

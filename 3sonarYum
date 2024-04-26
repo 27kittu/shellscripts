@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# For playwithk8s servers
+yum update -y
+yum-config-manager --save --setopt=kubernetes.skip_if_unavailable=true
+yum install epel-release -y
+
+
+update() {
+yum update -y
+yum install -y vim zip tar wget git net-tools curl java-11-openjdk-devel
+}
+update
+#changing vim default colorscheme
+cat > /etc/vim/vimrc <<eof
+syntax enable
+colorscheme ron
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+eof
+
+# Creating a new 'Sonar' user
+sudo adduser -m -s /bin/bash -U sonar
+cp /etc/sudoers /etc/sudoers.bak
+sed -i 's/root\s*ALL=(ALL)\s*ALL/root    ALL=(ALL)       ALL\nsonar ALL=(ALL)       NOPASSWD: ALL/' /etc/sudoers
+wget -P /opt  https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.2.1.78527.zip
+unzip /opt/sonarqube-10.2.1.78527.zip -d /opt
+mv /opt/sonarqube-10.2.1.78527 /opt/sonarqube
+chown sonar:sonar -R /opt/sonarqube
+chmod 775 -R /opt/sonarqube
+ln -s /opt/sonarqube/bin/linux-x64-86/sonar.sh	/etc/init.d/sonar
+startSonar(){
+systemctl start sonar
+}
+startSonar
+if [ $? -ne 0 ]
+then
+	if [ $? -eq 1 && ]
+	then 
+		
+	fi
+fi
+
